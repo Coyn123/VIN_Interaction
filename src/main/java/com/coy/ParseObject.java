@@ -10,9 +10,11 @@ public class ParseObject {
     public void parseResponse(String resp) throws JsonProcessingException {
         System.err.println(resp);
         ObjectMapper mapper = new ObjectMapper();
-        Map<String, Object> map = mapper.readValue(resp, Map.class);
-        map.forEach((k, v) -> System.out.println(k + ": " + v));
+        Map map = mapper.readValue(resp, Map.class);
         List<Map<String, Object>> results = (List<Map<String, Object>>) map.get("Results");
-        results.forEach(entry -> entry.forEach((k, v) -> System.out.println(k + ": " + v)));
+        results.forEach(entry -> entry.forEach((k, v) -> {
+            if (v != null && !v.toString().isEmpty() && !v.toString().equals("Not Applicable"))
+                System.out.println(k + ": " + v);
+        }));
     }
 }

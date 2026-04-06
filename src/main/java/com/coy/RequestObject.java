@@ -26,8 +26,6 @@ public class RequestObject {
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            //int status = response.statusCode();
-            //System.err.println(body + status);
             return response.body();
         } catch (IOException | InterruptedException e) {
             if (e instanceof HttpConnectTimeoutException) {
