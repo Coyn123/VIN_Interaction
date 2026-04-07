@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.util.Scanner;
 
-//WBA13BJ06MWX31988
+//Two valid VINs for testing:
+    //WBA13BJ06MWX31988
+    //3KPF34AD4LE142499
 public class Main {
     static void main(String[] args) throws JsonProcessingException {
         RequestObject rqst = new RequestObject();

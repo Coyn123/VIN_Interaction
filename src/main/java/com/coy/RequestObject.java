@@ -11,6 +11,21 @@ import java.time.Duration;
 public class RequestObject {
 
     String requestAVin(String vin) {
+        //Some simple sanitization
+        vin = vin.toUpperCase().trim();
+        if (vin.length() != 17) {
+            System.err.print("Invalid VIN length");
+            return null;
+        }
+        if (vin.contains("I") || vin.contains("O") || vin.contains("Q")) {
+            System.err.print("Invalid VIN - blacklisted character(s) present");
+            return null;
+        }
+        final char c = vin.charAt(8);
+        if (!((c >= '0' && c <= '9') || c == 'X')) {
+            System.err.print("Invalid check digit");
+            return null;
+        }
         try {
             HttpClient client = HttpClient.newBuilder()
                     .connectTimeout(Duration.ofSeconds(5))
@@ -19,6 +34,7 @@ public class RequestObject {
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create("https://vpic.nhtsa.dot.gov/api/vehicles/decodevinvalues/" + vin + "?format=json"))
+                    //Govt API needs time, lowering this may cause false-negative timeouts
                     .timeout(Duration.ofSeconds(60))
                     .header("User-Agent", "Mozilla/5.0")
                     .GET()
