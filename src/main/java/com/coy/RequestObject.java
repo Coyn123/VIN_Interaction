@@ -11,21 +11,6 @@ import java.time.Duration;
 public class RequestObject {
 
     String requestAVin(String vin) {
-        //Some simple sanitization
-        vin = vin.toUpperCase().trim();
-        if (vin.length() != 17) {
-            System.err.print("Invalid VIN length");
-            return null;
-        }
-        if (vin.contains("I") || vin.contains("O") || vin.contains("Q")) {
-            System.err.print("Invalid VIN - blacklisted character(s) present");
-            return null;
-        }
-        final char c = vin.charAt(8);
-        if (!((c >= '0' && c <= '9') || c == 'X')) {
-            System.err.print("Invalid check digit");
-            return null;
-        }
         try {
             HttpClient client = HttpClient.newBuilder()
                     .connectTimeout(Duration.ofSeconds(5))
@@ -51,5 +36,22 @@ public class RequestObject {
             }
             return null;
         }
+    }
+    String sanitize(String vin) {
+        final String cleaned = vin.toUpperCase().trim();
+        if (cleaned.length() != 17) {
+            System.err.print("Invalid VIN length");
+            return null;
+        }
+        if (cleaned.contains("I") || cleaned.contains("O") || cleaned.contains("Q")) {
+            System.err.print("Invalid VIN - blacklisted character(s) present");
+            return null;
+        }
+        final char c = cleaned.charAt(8);
+        if (!((c >= '0' && c <= '9') || c == 'X')) {
+            System.err.print("Invalid check digit");
+            return null;
+        }
+        return cleaned;
     }
 }
